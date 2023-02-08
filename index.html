@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Star Wars API</title>
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        nav li {
+            margin: 0 10px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        nav a:hover {
+            color: #000;
+        }
+
+        ul {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        li {
+            list-style: none;
+            width: 300px;
+            margin: 10px;
+            text-align: center;
+        }
+
+        a {
+            text-decoration: none;
+            color: #00bfff;
+        }
+
+        a:hover {
+            color: #000;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Star Wars API</h1>
+    <nav>
+        <ul>
+            <li><a href="#people">People</a></li>
+            <li><a href="#films">Films</a></li>
+        </ul>
+    </nav>
+    <h2 id="people">People</h2>
+    <ul id="people-list">
+        <!-- People will be displayed here -->
+    </ul>
+    <h2 id="films">Films</h2>
+    <ul id="films-list">
+        <!-- Films will be displayed here -->
+    </ul>
+
+    <script>
+        // API endpoint
+        const API_URL = "https://swapi.dev/api/";
+
+        // Fetch people from API
+        fetch(API_URL + "people/")
+            .then(response => response.json())
+            .then(data => {
+                const peopleList = document.getElementById("people-list");
+                data.results.forEach(person => {
+                    const personItem = document.createElement("li");
+                    personItem.innerHTML = `<a href="#">${person.name}</a>`;
+                    peopleList.appendChild(personItem);
+
+                    // Add click event to each person item
+                    personItem.addEventListener("click", event => {
+                        event.preventDefault();
+                        // Fetch the films for the selected person
+                        fetch(person.films[0])
+                            .then(response => response.json())
+                            .then(film => {
+                                alert(`${person.name} is in the film ${film.title}.`);
+                            });
+                    });
+                });
+            });
+
+        // Fetch films from API
+        fetch(API_URL + "films/")
+            .then(response => response.json())
+            .then(data => {
+                const filmsList = document.getElementById("films-list");
+                data.results.forEach(film => {
+                    const filmItem = document.createElement("li");
+                    filmItem.innerHTML = `<a href="#">${film.title}</a>`;
+                    filmsList.appendChild(filmItem);
+
+                    // Add click event to each film item
+                    filmItem.addEventListener("click", event => {
+                        event.preventDefault();
+                        // Fetch the characters for the selected film
+                        fetch(film.characters[0])
+                            .then(response => response.json())
+                            .then(character => {
+                                alert(`${film.title} features ${character.name}.`);
+                            });
+                    });
+                });
+            });
+    </script>
+</body>
+
+</html>
